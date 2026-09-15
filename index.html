@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="tr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Harita Avcısı" />
+    <meta name="theme-color" content="#041018" />
+    <meta name="description" content="Bayram Meral ile Harita Avcısı: Türkiye'nin 81 ilini haritada öğren, KPSS coğrafya sorularıyla kendini sına." />
+    <link rel="apple-touch-icon" href="icon-180.png" />
+    <link rel="manifest" href="manifest.webmanifest" />
+    <title>Bayram Meral ile Harita Avcısı</title>
+    <link rel="icon" href="icon-192.png" />
+    <link rel="stylesheet" href="styles.css?v=30" />
+  </head>
+  <body>
+    <div id="phone">
+      <section id="menu" class="screen active">
+        <canvas id="menu-fx"></canvas>
+        <div class="brand-wrap">
+          <img class="brand" src="b-hocam.png" alt="Benim Hocam" />
+          <span>Benim Hocam</span>
+        </div>
+        <img class="title-logo" src="title-gold2.png" alt="Bayram Meral ile Harita Avcısı" />
+        <div class="menu-mid">
+          <p id="tap-hint">Dokun</p>
+          <div id="loader" hidden>
+            <p>Yükleniyor</p>
+            <div class="load-track"><i id="load-bar"></i></div>
+          </div>
+          <div id="menu-actions" hidden>
+            <button type="button" class="btn gold" id="btn-go">Harita Bilmece</button>
+            <button type="button" class="btn" id="btn-speed">Hız Turu</button>
+            <button type="button" class="btn" id="btn-kpss">KPSS</button>
+            <button type="button" class="btn ghost" id="btn-how">Nasıl oynanır</button>
+            <p id="menu-meta"></p>
+          </div>
+        </div>
+        <p class="credit">Hazırlayan: Oğuz ARIK</p>
+        <p id="phone-url" hidden></p>
+        <p id="ios-hint" hidden>Safari: Paylaş <b>⎋</b> → <b>Ana Ekrana Ekle</b> ile tam ekran oyna</p>
+      </section>
+
+      <section id="play" class="screen">
+        <header class="hud">
+          <button class="back" id="btn-back" aria-label="Menü">‹</button>
+          <div class="scorebox">
+            <b id="score">0</b>
+            <small id="meta-line">0 / 81</small>
+          </div>
+          <div id="combo"></div>
+          <button class="ask-btn" id="btn-quiz">Soru</button>
+          <button class="ask-btn" id="btn-reset" type="button">Sıfırla</button>
+        </header>
+        <div id="prog"><i id="prog-bar"></i></div>
+        <div id="regions"></div>
+        <div id="stage-wrap">
+          <canvas id="stage"></canvas>
+          <p id="float-name"></p>
+          <p id="hint"></p>
+          <div id="zoom-btns">
+            <button type="button" id="z-in" aria-label="Yaklaş">+</button>
+            <button type="button" id="z-out" aria-label="Uzaklaş">−</button>
+            <button type="button" id="z-fit" aria-label="Tümü">◎</button>
+          </div>
+        </div>
+        <div id="dock">
+          <p id="ask">Haritadan bir ile dokun</p>
+          <div id="choices"></div>
+        </div>
+      </section>
+
+      <div id="how" hidden>
+        <div class="card-shot how-card">
+          <p class="eyebrow">Nasıl oynanır</p>
+          <h2>Harita Avcısı</h2>
+          <p><b>Harita Bilmece</b> — Önce bölgeye dokun, sonra ile. Üç yakın isimden doğruyu seç. İsim bir an görünür, yine kapanır. Bölgeleri tamamla, 81 ili yerinden öğren.</p>
+          <p><b>Hız Turu</b> — 60 saniye. Yanan ilin adını üç şıktan seç. Seri yaptıkça puan katlanır.</p>
+          <p><b>KPSS</b> — 20 soru, beş şık, 12 dakika. Konum, komşu, bölge, kıyı, sınır, demir yatağı. Net = doğru − yanlış × 0,25. Sınav sonunda yanlışlarına dokun, haritada gör.</p>
+          <p class="keys">Klavye: A–E veya 1–5 şık · Boşluk rastgele soru · Esc menü</p>
+          <button type="button" class="btn gold" id="how-ok">Anladım</button>
+        </div>
+      </div>
+    </div>
+    <script src="mapdata.js?v=11"></script>
+    <script src="game.js?v=30"></script>
+  </body>
+</html>

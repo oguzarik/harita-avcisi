@@ -1,0 +1,17 @@
+{
+  "name": "Bayram Meral ile Harita Avcısı",
+  "short_name": "Harita Avcısı",
+  "description": "Türkiye'nin 81 ilini haritada öğren, KPSS coğrafya sorularıyla kendini sına.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#041018",
+  "theme_color": "#041018",
+  "lang": "tr",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

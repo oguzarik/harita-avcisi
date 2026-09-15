@@ -1,0 +1,24 @@
+Bayram Meral ile Harita Avcısı
+Hazırlayan: Oğuz ARIK  ·  Benim Hocam
+
+ÜÇ ŞEKİLDE OYNANIR
+
+1) İNTERNETTEN (telefon ve bilgisayar, en kolay yol)
+   https://oguzarik.github.io/harita-avcisi/
+   iPhone: Safari'de aç → Paylaş → "Ana Ekrana Ekle". Tam ekran uygulama
+   gibi açılır, bir kez yüklendikten sonra internetsiz de çalışır.
+   Android: Chrome'da aç → menü → "Ana ekrana ekle".
+
+2) BİLGİSAYARDA TEK DOSYA (internet gerekmez)
+   dist\HaritaAvcisi.html dosyasına çift tıkla. Edge veya Chrome'da açılır.
+   Pencere gibi açmak için: dist\Harita Avcisi (PC).bat
+   Bu tek dosyayı USB ile başka bilgisayara da atabilirsin.
+
+3) EV AĞINDAN TELEFONA (eski yöntem)
+   YURT.vbs dosyasına çift tıkla. Bilgisayar ve telefon aynı Wi-Fi'de olsun.
+   TELEFON.txt içindeki adresi telefonda aç. Bilgisayar açık kalmalı.
+
+GELİŞTİRİCİ
+   Tek dosyayı yeniden üretmek: node build.js
+   Yayına almak: git push (GitHub Pages otomatik güncellenir)
+   .app-profile klasörünü kopyalama, gereksizdir.
