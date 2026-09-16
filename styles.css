@@ -58,10 +58,21 @@ body {
   align-items: center;
   justify-content: flex-end;
   text-align: center;
-  padding: 0 0 calc(72px + env(safe-area-inset-bottom, 0px));
+  padding: 0 0 calc(64px + env(safe-area-inset-bottom, 0px));
   background:
-    linear-gradient(180deg, rgba(4, 10, 24, 0.4) 0%, rgba(4, 10, 24, 0.08) 28%, transparent 48%, rgba(4, 10, 24, 0.35) 100%),
-    url("menu-earth.png") center top / cover no-repeat;
+    linear-gradient(180deg, transparent 0%, transparent 62%, rgba(4, 10, 24, 0.45) 100%),
+    url("menu-poster.jpg") center top / cover no-repeat #061a33;
+}
+
+#menu .title-logo,
+#menu .brand-wrap {
+  display: none;
+}
+
+@media (orientation: landscape) {
+  #menu {
+    background-position: center 22%;
+  }
 }
 
 .brand-wrap {
