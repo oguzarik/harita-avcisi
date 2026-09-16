@@ -378,6 +378,23 @@ h1 {
   }
 }
 
+@media (max-height: 460px) {
+  .menu-mid {
+    width: min(190px, 60%);
+  }
+  #menu-actions {
+    gap: 0;
+  }
+  #menu-meta,
+  .credit {
+    display: none;
+  }
+  #menu {
+    padding-bottom: 12px;
+    background-position: center 30%;
+  }
+}
+
 #menu-actions[hidden],
 #loader[hidden],
 #tap-hint[hidden] {
