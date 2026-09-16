@@ -1,4 +1,4 @@
-const VERSION = "harita-avcisi-v33";
+const VERSION = "harita-avcisi-v34";
 const ASSETS = [
   "./",
   "./index.html",

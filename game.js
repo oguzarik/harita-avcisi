@@ -477,9 +477,77 @@
     return toUV(YURT_MAP[i].cx, YURT_MAP[i].cy);
   }
 
+  function segDist2(px, py, ax, ay, bx, by) {
+    const dx = bx - ax;
+    const dy = by - ay;
+    const len2 = dx * dx + dy * dy;
+    let t = len2 > 0 ? ((px - ax) * dx + (py - ay) * dy) / len2 : 0;
+    t = t < 0 ? 0 : t > 1 ? 1 : t;
+    const qx = ax + dx * t;
+    const qy = ay + dy * t;
+    return (px - qx) * (px - qx) + (py - qy) * (py - qy);
+  }
+
+  // Ekran noktasının i. ilin sınır çizgisine olan en kısa uzaklığının karesi (px²)
+  function edgeDist2(i, sx, sy) {
+    let bd = Infinity;
+    const rings = YURT_MAP[i].rings;
+    for (let r = 0; r < rings.length; r++) {
+      const ring = rings[r];
+      let prev = project(ring[ring.length - 1][0], ring[ring.length - 1][1]);
+      for (let k = 0; k < ring.length; k++) {
+        const cur = project(ring[k][0], ring[k][1]);
+        const d = segDist2(sx, sy, prev.x, prev.y, cur.x, cur.y);
+        if (d < bd) bd = d;
+        prev = cur;
+      }
+    }
+    return bd;
+  }
+
+  // Ekran koordinatında en yakın il sınırını bulur (piksel toleransı ile).
+  function nearestEdgeIl(sx, sy, tolPx) {
+    let best = -1;
+    let bd = tolPx * tolPx;
+    for (let i = 0; i < YURT_MAP.length; i++) {
+      const d = edgeDist2(i, sx, sy);
+      if (d < bd) {
+        bd = d;
+        best = i;
+      }
+    }
+    return best;
+  }
+
   function hitAt(sx, sy) {
     const geo = unproject(sx, sy);
-    return hitIl(geo.lon, geo.lat);
+    // 1) Noktayı içeren iller (basitleştirilmiş sınırlar yer yer çakışır, birden fazla olabilir)
+    const cands = [];
+    for (let i = 0; i < YURT_MAP.length; i++) {
+      const rings = YURT_MAP[i].rings;
+      for (let r = 0; r < rings.length; r++) {
+        if (pip(geo.lon, geo.lat, rings[r])) {
+          cands.push(i);
+          break;
+        }
+      }
+    }
+    if (cands.length === 1) return cands[0];
+    if (cands.length > 1) {
+      // Çakışmada nokta hangi ilin sınırından daha uzaktaysa (daha derindeyse) o il kazanır
+      let best = cands[0];
+      let bd = -1;
+      for (let k = 0; k < cands.length; k++) {
+        const d = edgeDist2(cands[k], sx, sy);
+        if (d > bd) {
+          bd = d;
+          best = cands[k];
+        }
+      }
+      return best;
+    }
+    // 2) Sınır boşluğuna ya da kıyıya denk geldiyse en yakın il SINIRI kazanır
+    return nearestEdgeIl(sx, sy, 26);
   }
 
   function buildLineCells(src) {
@@ -683,25 +751,6 @@
       }
     }
     return inside;
-  }
-
-  function hitIl(lon, lat) {
-    for (let i = 0; i < YURT_MAP.length; i++) {
-      const rings = YURT_MAP[i].rings;
-      for (let r = 0; r < rings.length; r++) {
-        if (pip(lon, lat, rings[r])) return i;
-      }
-    }
-    let best = -1;
-    let bd = 0.22 / cam.z;
-    for (let i = 0; i < YURT_MAP.length; i++) {
-      const d = Math.hypot(YURT_MAP[i].cx - lon, YURT_MAP[i].cy - lat);
-      if (d < bd) {
-        bd = d;
-        best = i;
-      }
-    }
-    return best;
   }
 
   function clampCam(c) {
@@ -1599,17 +1648,20 @@
       audio();
     } catch (_) {}
     show("play");
+    try {
+      fit();
+      const home = homeCam();
+      cam = { x: home.x, y: home.y, z: home.z };
+      want = { x: home.x, y: home.y, z: home.z };
+      fn();
+    } catch (err) {
+      console.error(err);
+      say("Açılamadı. Oyunu kapatıp tekrar dene.", 4);
+    }
     requestAnimationFrame(() => {
       try {
         fit();
-        const home = homeCam();
-        cam = { x: home.x, y: home.y, z: home.z };
-        want = { x: home.x, y: home.y, z: home.z };
-        fn();
-      } catch (err) {
-        console.error(err);
-        say("Açılamadı. Oyunu kapatıp tekrar dene.", 4);
-      }
+      } catch (_) {}
     });
   }
 
@@ -1857,7 +1909,9 @@
     if (scene !== "play") return;
     audio();
     const p = pos(ev);
-    pointers.set(ev.pointerId, { x: p.x, y: p.y, sx: p.x, sy: p.y });
+    // Dokunulan anda hangi ilin üstündeyse onu hatırla (harita kayarken bile doğru il seçilsin)
+    const hit0 = pointers.size === 0 ? hitAt(p.x, p.y) : -1;
+    pointers.set(ev.pointerId, { x: p.x, y: p.y, sx: p.x, sy: p.y, hit0 });
     dragging = false;
     moved = 0;
   });
@@ -1865,8 +1919,10 @@
   canvas.addEventListener("pointermove", (ev) => {
     if (scene !== "play") return;
     const p = pos(ev);
-    hover = hitAt(p.x, p.y);
-    if (!pointers.has(ev.pointerId)) return;
+    if (!pointers.has(ev.pointerId)) {
+      if (ev.pointerType === "mouse") hover = hitAt(p.x, p.y);
+      return;
+    }
     const prev = pointers.get(ev.pointerId);
     if (pointers.size === 2) {
       const pts = [...pointers.values()];
@@ -1884,7 +1940,7 @@
       const dx = p.x - prev.x;
       const dy = p.y - prev.y;
       moved += Math.hypot(dx, dy);
-      if (moved > 8) {
+      if (moved > 14) {
         dragging = true;
         if (!canvas.hasPointerCapture(ev.pointerId)) {
           try {
@@ -1899,7 +1955,7 @@
         want.z = cam.z;
       }
     }
-    pointers.set(ev.pointerId, { x: p.x, y: p.y, sx: prev.sx, sy: prev.sy });
+    pointers.set(ev.pointerId, { x: p.x, y: p.y, sx: prev.sx, sy: prev.sy, hit0: prev.hit0 });
   });
 
   function endPointer(ev) {
@@ -1911,18 +1967,19 @@
     if (!pointers.has(ev.pointerId)) return;
     const p = pointers.get(ev.pointerId);
     pointers.delete(ev.pointerId);
-    if (scene !== "play" || dragging || moved > 10) return;
+    if (scene !== "play" || dragging || moved > 16) return;
     if (speed) return;
+    // Parmağın ilk değdiği yerdeki il esas alınır; yoksa kalktığı yer
+    const tapped = p.hit0 != null && p.hit0 >= 0 ? p.hit0 : hitAt(p.sx, p.sy);
     if (mode === "kpss") {
       const it = exam && exam.items[exam.q];
       if (it && it.type === "demir-map" && !answering) {
-        const i = hitAt(p.x, p.y);
-        if (i >= 0) tapExamIl(i);
+        if (tapped >= 0) tapExamIl(tapped);
         else say("Bir ile dokun.", 1.4);
       }
       return;
     }
-    const i = hitAt(p.x, p.y);
+    const i = tapped;
     if (i >= 0) {
       const r = YURT_MAP[i].r;
       if (regionOn === "all" && cam.z < homeZ * 1.25) {
@@ -1950,6 +2007,7 @@
 
   function tick(dt) {
     if (scene !== "play") return;
+    if (viewW < 2 || viewH < 2) fit();
     time += dt;
     if (speed) {
       const prev = Math.ceil(speed.t);
@@ -2179,6 +2237,15 @@
     },
     { passive: false }
   );
+  // Hata ayıklama kancası (konsoldan dokunma doğruluğu testi için)
+  window.__yurt = {
+    project,
+    unproject,
+    hitAt,
+    cam: () => cam,
+    view: () => ({ w: viewW, h: viewH }),
+    select: selectIl,
+  };
   last = performance.now();
   requestAnimationFrame(loop);
 })();
