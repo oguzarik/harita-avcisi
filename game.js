@@ -2031,17 +2031,25 @@
     if (hint) hint.hidden = true;
     loader.hidden = false;
     bar.style.width = "0%";
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        bar.style.width = "100%";
-      });
-    });
-    setTimeout(() => {
-      menuLoading = false;
-      menuReady = true;
-      loader.hidden = true;
-      document.getElementById("menu-actions").hidden = false;
-    }, 2100);
+    const t0 = performance.now();
+    const DUR = 2200;
+    const timer = setInterval(() => {
+      const t = Math.min(1, (performance.now() - t0) / DUR);
+      const eased = 1 - Math.pow(1 - t, 2.2);
+      bar.style.width = (eased * 100).toFixed(1) + "%";
+      if (t >= 1) {
+        clearInterval(timer);
+        setTimeout(() => {
+          menuLoading = false;
+          menuReady = true;
+          loader.hidden = true;
+          document.getElementById("menu-actions").hidden = false;
+          try {
+            sndPaper();
+          } catch (_) {}
+        }, 260);
+      }
+    }, 30);
   }
   document.getElementById("menu").addEventListener("click", (e) => {
     if (e.target.closest("button")) return;

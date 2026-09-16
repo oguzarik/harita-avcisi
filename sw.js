@@ -1,4 +1,4 @@
-const VERSION = "harita-avcisi-v32";
+const VERSION = "harita-avcisi-v33";
 const ASSETS = [
   "./",
   "./index.html",
@@ -11,6 +11,7 @@ const ASSETS = [
   "./btn-kpss.png",
   "./btn-tuik.png",
   "./btn-nasil.png",
+  "./load-frame.png",
   "./b-hocam.png",
   "./title-gold2.png",
   "./icon-180.png",
