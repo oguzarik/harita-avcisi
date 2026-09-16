@@ -13,7 +13,7 @@
     <link rel="manifest" href="manifest.webmanifest" />
     <title>Bayram Meral ile Harita Avcısı</title>
     <link rel="icon" href="icon-192.png" />
-    <link rel="stylesheet" href="styles.css?v=31" />
+    <link rel="stylesheet" href="styles.css?v=32" />
   </head>
   <body>
     <div id="phone">
@@ -31,10 +31,11 @@
             <div class="load-track"><i id="load-bar"></i></div>
           </div>
           <div id="menu-actions" hidden>
-            <button type="button" class="btn gold" id="btn-go">Harita Bilmece</button>
-            <button type="button" class="btn" id="btn-speed">Hız Turu</button>
-            <button type="button" class="btn" id="btn-kpss">KPSS</button>
-            <button type="button" class="btn ghost" id="btn-how">Nasıl oynanır</button>
+            <button type="button" class="ibtn" id="btn-go"><img src="btn-bilmece.png" alt="Harita Bilmece" /></button>
+            <button type="button" class="ibtn" id="btn-speed"><img src="btn-hiz.png" alt="Hız Turu" /></button>
+            <button type="button" class="ibtn" id="btn-kpss"><img src="btn-kpss.png" alt="KPSS" /></button>
+            <button type="button" class="ibtn" id="btn-tuik"><img src="btn-tuik.png" alt="TUİK" /></button>
+            <button type="button" class="ibtn" id="btn-how"><img src="btn-nasil.png" alt="Nasıl oynanır" /></button>
             <p id="menu-meta"></p>
           </div>
         </div>
@@ -83,8 +84,17 @@
           <button type="button" class="btn gold" id="how-ok">Anladım</button>
         </div>
       </div>
+
+      <div id="soon" hidden>
+        <div class="card-shot how-card">
+          <p class="eyebrow">TUİK</p>
+          <h2>Yakında</h2>
+          <p>Nüfus, yüzölçümü ve il istatistikleri üzerine sorular hazırlanıyor.</p>
+          <button type="button" class="btn gold" id="soon-ok">Tamam</button>
+        </div>
+      </div>
     </div>
     <script src="mapdata.js?v=11"></script>
-    <script src="game.js?v=30"></script>
+    <script src="game.js?v=32"></script>
   </body>
 </html>

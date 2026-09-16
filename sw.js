@@ -1,4 +1,4 @@
-const VERSION = "harita-avcisi-v31";
+const VERSION = "harita-avcisi-v32";
 const ASSETS = [
   "./",
   "./index.html",
@@ -6,6 +6,11 @@ const ASSETS = [
   "./game.js",
   "./mapdata.js",
   "./menu-poster.jpg",
+  "./btn-bilmece.png",
+  "./btn-hiz.png",
+  "./btn-kpss.png",
+  "./btn-tuik.png",
+  "./btn-nasil.png",
   "./b-hocam.png",
   "./title-gold2.png",
   "./icon-180.png",

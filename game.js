@@ -2052,6 +2052,15 @@
     openHow();
   });
   document.getElementById("how-ok").addEventListener("click", closeHow);
+  document.getElementById("btn-tuik").addEventListener("click", (e) => {
+    e.stopPropagation();
+    audio();
+    sndPaper();
+    document.getElementById("soon").hidden = false;
+  });
+  document.getElementById("soon-ok").addEventListener("click", () => {
+    document.getElementById("soon").hidden = true;
+  });
 
   document.getElementById("btn-go").addEventListener("click", (e) => {
     e.preventDefault();
@@ -2072,6 +2081,10 @@
     if (e.key === "Escape") {
       if (!document.getElementById("how").hidden) {
         closeHow();
+        return;
+      }
+      if (!document.getElementById("soon").hidden) {
+        document.getElementById("soon").hidden = true;
         return;
       }
       if (scene === "play" || scene === "clear") goMenu();
